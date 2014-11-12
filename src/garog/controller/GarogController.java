@@ -21,8 +21,6 @@ public class GarogController implements ChangeListener {
     public void stateChanged(ChangeEvent e) {
         if(m.getListenLaenge()>900)
             m.setMovegraph(m.getListenLaenge() / 1000 * ((JSlider) e.getSource()).getValue());
-        //Wenn der Sliderwert sich verändert hat, dann den aktuellen Wert in die Daten schreiben
         system.refresh();
-        //m.setValue(((JSlider) e.getSource()).getValue());
     }
 }

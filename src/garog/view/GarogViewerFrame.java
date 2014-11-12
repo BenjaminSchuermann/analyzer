@@ -29,7 +29,6 @@ public class GarogViewerFrame extends JFrame {
         // Slider anzeigen
         MySlider slider = new MySlider(HORIZONTAL, 0, 1000, 10);
         slider.setBounds(46, 401, 900, 20);
-        slider.setValue(m.getValue());
         slider.addChangeListener(new GarogController(system, m));
         add(slider);
 

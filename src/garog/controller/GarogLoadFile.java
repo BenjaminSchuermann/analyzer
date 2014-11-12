@@ -27,19 +27,20 @@ public class GarogLoadFile implements ActionListener {
             }
             try {
                 BufferedReader in = new BufferedReader(new FileReader(file));
-                String zeile = null;
+                String zeile;
                 String werte[];
                 m.resetListen();
                 while ((zeile = in.readLine()) != null) {
                     werte = zeile.split(";");
                     //System.out.println("Gelesene Zeile: " + zeile);
                     try {
-                        int testparse = Integer.parseInt(werte[0]);
+                        //noinspection ResultOfMethodCallIgnored
+                        Integer.parseInt(werte[0]);
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(null, "File not valid");
                         return;
                     }
-                    m.setMesswerte(Integer.parseInt(werte[0]),Integer.parseInt(werte[1]));
+                    m.setMesswerte(Integer.parseInt(werte[1]));
                 }
                 system.refresh();
             } catch (IOException e) {

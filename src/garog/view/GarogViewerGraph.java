@@ -8,6 +8,9 @@ import java.awt.*;
 public class GarogViewerGraph extends JComponent {
     private GarogModel m;
 
+    private String haifisch[] = {"0", "30", "60", "90", "120", "150", "180", "210", "240", "270", "300", "330", "360"};
+    private String sinus[] = {"180", "150", "120", "90", "60", "30", "0", "30", "60", "90", "120", "150", "180"};
+
     private int[] graphValues;
 
     public GarogViewerGraph(GarogModel m) {
@@ -19,9 +22,11 @@ public class GarogViewerGraph extends JComponent {
     public void refresh() {
         if (!(m.getListenLaenge() > 0))
             JOptionPane.showMessageDialog(null, "No valid file found");
-        // Die Werte einen weiter schieben
+        // Je nach Anzeigetyp umschalten, "Haifisch" oder "Sinus"
         if (m.isDisplaytype()) {
             for (int i = 0; i < 899; i++) {
+                //hier der"Sinus"
+                //Nur für den sichbaren Bereich die Daten laden
                 if (i < m.getListenLaenge() - m.getMovegraph()) {
                     if (m.getMesserte(i + m.getMovegraph()) <= 90) {
                         graphValues[i] = m.getMesserte(i + m.getMovegraph()) * 2 + 180;
@@ -33,13 +38,17 @@ public class GarogViewerGraph extends JComponent {
                         graphValues[i] = ((m.getMesserte(i + m.getMovegraph()) - 270) * 2);
                     }
                 } else
+                    //falls weniger als 900 Werte vorhanden sind (bzw. Rest beim scrollen) Rest mit 0 füllen
                     graphValues[i] = 0;
             }
         } else {
+            //Normale Anzeige im Sägezahn
             for (int i = 0; i < 899; i++) {
+                //Nur für den sichbaren Bereich die Daten laden
                 if (i < m.getListenLaenge() - m.getMovegraph())
                     graphValues[i] = m.getMesserte(i + m.getMovegraph());
                 else
+                    //falls weniger als 900 Werte vorhanden sind Rest mit 0 füllen
                     graphValues[i] = 0;
             }
         }
@@ -47,20 +56,10 @@ public class GarogViewerGraph extends JComponent {
         repaint();
     }
 
-    private void restart() {
-        // zu Beginn alles zurücksetzen für die Kurve
-        //m.resetListen();
-        //m.setStartzeit(System.currentTimeMillis());
-        //for (int i = 0; i < graphValues.length; i++)
-        //{
-        //    graphValues[i] = 0;
-        // }
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Weißes Tracefeld anlegen
+        // Tracefeld anlegen
         g.setColor(Color.DARK_GRAY);
         g.fillRect(46, 40, 900, 360);
         // schwarze Tracefeldumrand anlegen
@@ -68,21 +67,19 @@ public class GarogViewerGraph extends JComponent {
         g.drawLine(45, 40, 45, 400);
         g.drawLine(45, 400, 945, 400);
         // Beschriftung erzeugen
-        // Zeitleiste Achse x
-        for (Double timeline = 0.0; timeline >= -9.0; timeline = timeline - 0.5) {
-            //g.drawString(timeline.toString(), 930 + (int) (timeline * 100), 415);
-        }
+        // Zeitleiste Achse x todo eventuell mitscrollen
+        //for (Double timeline = 0.0; timeline >= -9.0; timeline = timeline - 0.5) {
+        //g.drawString(timeline.toString(), 930 + (int) (timeline * 100), 415);
+        //}
         // Gradleiste Achse y
-        for (Integer degree = 0; degree <= 360; degree = degree + 30) {
+        for (int i = 0; i <= 12; i++) {
             String textdegree[];
+            //Je nach Anzeigetyp den Beschiftungstext wählen
             if (m.isDisplaytype())
-                textdegree = m.getSinus();
+                textdegree = sinus;
             else
-                textdegree = m.getHaifisch();
-
-            // Um den Text "rechtsbündig" darzustellen
-            //g.drawString(degree.toString(), 20, 405 - degree);
-            g.drawString(textdegree[degree / 30], 20, 405 - degree);
+                textdegree = haifisch;
+            g.drawString(textdegree[i], 20, 405 - i * 30);
         }
         // Hilfslinienfarbe
         g.setColor(Color.GRAY);
