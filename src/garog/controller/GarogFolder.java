@@ -18,7 +18,7 @@ public class GarogFolder extends JComponent {
             @Override
             public boolean accept(File f) {
                 //measured values.csv
-                return f.isDirectory() || f.getName().equals("measuredvalues.csv");
+                return f.isDirectory() || f.getName().endsWith("measuredvalues.csv");
             }
 
             @Override
